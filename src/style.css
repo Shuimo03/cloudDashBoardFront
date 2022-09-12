@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'xhh';
+  src: url('./assets/font/ChuLianDeShi-2.ttf');
+}
+
+.hello{
+  font-family: xhh;
+  color: red;
+  width: 100px;
+  height: 200px;
+  background: url('./assets/36.png');
+}
