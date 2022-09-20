@@ -1,6 +1,7 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const isDEV = process.env.NODE_ENV === "development"; // 是否是开发模式
 
 module.exports = {
@@ -15,7 +16,7 @@ module.exports = {
         alias: {
             "@": path.join(__dirname, "src"),
         },
-        modules: [path.resolve(__dirname, "node_modules")],
+        modules: ["node_modules"],
         extensions: [".js", ".tsx", ".ts"],
     },
     cache: {
@@ -23,7 +24,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, "public/index.html"), // 模板取定义root节点的模板
+            template: path.join(__dirname, "public/index.html"), // 模板取定义root节点的模板
             inject: true, // 自动注入静态资源
         }),
         new webpack.DefinePlugin({
@@ -34,12 +35,12 @@ module.exports = {
         rules: [
             {
                 test: /.(ts|tsx)$/, // 匹配.ts, tsx文件
-                include: [path.resolve(__dirname, "src")],
+                include: [path.join(__dirname, "src")],
                 use: ["thread-loader", "babel-loader"],
             },
             {
                 test: /.css$/, //匹配所有的 css 文件
-                include: [path.resolve(__dirname, "../src")],
+                include: [path.join(__dirname, "../src")],
                 use: [
                     isDEV ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
                     "css-loader",
@@ -48,7 +49,7 @@ module.exports = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                include: [path.resolve(__dirname, "src")],
+                include: [path.join(__dirname, "src")],
                 use: [
                     isDEV ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
                     "css-loader",

@@ -1,10 +1,11 @@
 const path = require("path");
 const { merge } = require("webpack-merge");
 const CopyPlugin = require("copy-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const globAll = require("glob-all");
+const PurgeCSSPlugin = require("purgecss-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const PurgeCSSPlugin = require("purgecss-webpack-plugin");
 const baseConfig = require("./webpack.base.js");
 
 module.exports = merge(baseConfig, {
@@ -36,6 +37,10 @@ module.exports = merge(baseConfig, {
             new CssMinimizerPlugin({
                 filename: "static/css/[name].[contenthash:8].css", // 加上[contenthash:8]
             }), // 压缩css
+            // 抽离css插件
+            new MiniCssExtractPlugin({
+                filename: "static/css/[name].[contenthash:8].css",
+            }),
             new TerserPlugin({
                 // 压缩js
                 parallel: true, // 开启多线程压缩
@@ -45,6 +50,14 @@ module.exports = merge(baseConfig, {
                     },
                 },
             }),
+            new PurgeCSSPlugin({
+                // 检测src下所有tsx文件和public下index.html中使用的类名和id和标签名称
+                // 只打包这些文件中用到的样式
+                paths: globAll.sync([
+                    `${path.join(__dirname, "../src")}/**/*.tsx`,
+                    path.join(__dirname, "../public/index.html"),
+                ]),
+            }),
         ],
     },
     plugins: [
@@ -52,8 +65,8 @@ module.exports = merge(baseConfig, {
         new CopyPlugin({
             patterns: [
                 {
-                    from: path.resolve(__dirname, "public"), // 复制public下文件
-                    to: path.resolve(__dirname, "dist"), // 复制到dist目录中
+                    from: path.join(__dirname, "public"), // 复制public下文件
+                    to: path.join(__dirname, "dist"), // 复制到dist目录中
                     filter: (source) => {
                         return !source.includes("index.html"); // 忽略index.html
                     },
