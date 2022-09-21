@@ -35,21 +35,10 @@ module.exports = {
         rules: [
             {
                 test: /.(ts|tsx)$/, // 匹配.ts, tsx文件
-                include: [path.join(__dirname, "src")],
-                use: [/* "thread-loader",  */"babel-loader"],
+                use: [/* "thread-loader",  */ "babel-loader"],
             },
             {
-                test: /.css$/, //匹配所有的 css 文件
-                include: [path.join(__dirname, "../src")],
-                use: [
-                    isDEV ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
-                    "css-loader",
-                    "postcss-loader",
-                ],
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                include: [path.join(__dirname, "src")],
+                test: /\.s?css$/,
                 use: [
                     isDEV ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
                     "css-loader",

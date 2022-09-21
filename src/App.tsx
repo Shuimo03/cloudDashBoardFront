@@ -1,7 +1,13 @@
-import React from 'react'
-import { Button } from 'antd';
+import React from "react";
+import Router from "@/Router";
+import { Provider } from "react-redux";
+import globalStatus from "@/globalStatus";
+import './app.scss'
 
-function App() {
-  return <Button>21312</Button>
-}
-export default App
+const App = () => (
+    <Provider store={globalStatus}>
+        <Router />
+    </Provider>
+);
+
+export default App;
