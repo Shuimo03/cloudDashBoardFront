@@ -3,9 +3,10 @@ const { merge } = require("webpack-merge");
 const CopyPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const globAll = require("glob-all");
-const PurgeCSSPlugin = require("purgecss-webpack-plugin");
+const { PurgeCSSPlugin } = require("purgecss-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 const baseConfig = require("./webpack.base.js");
 
 module.exports = merge(baseConfig, {
@@ -34,19 +35,13 @@ module.exports = merge(baseConfig, {
         },
 
         minimizer: [
-            new CssMinimizerPlugin({
-                filename: "static/css/[name].[contenthash:8].css", // 加上[contenthash:8]
-            }), // 压缩css
-            // 抽离css插件
-            new MiniCssExtractPlugin({
-                filename: "static/css/[name].[contenthash:8].css",
-            }),
+            new CssMinimizerPlugin(), // 压缩css
             new TerserPlugin({
                 // 压缩js
                 parallel: true, // 开启多线程压缩
                 terserOptions: {
                     compress: {
-                        pure_funcs: ["console.log", "debugger"], // 删除console.log
+                        pure_funcs: ["console.log"], // 删除console.log
                     },
                 },
             }),
@@ -54,8 +49,8 @@ module.exports = merge(baseConfig, {
                 // 检测src下所有tsx文件和public下index.html中使用的类名和id和标签名称
                 // 只打包这些文件中用到的样式
                 paths: globAll.sync([
-                    `${path.join(__dirname, "../src")}/**/*.tsx`,
-                    path.join(__dirname, "../public/index.html"),
+                    `${path.join(__dirname, "src")}/**/*.tsx`,
+                    path.join(__dirname, "public/index.html"),
                 ]),
             }),
         ],
@@ -74,7 +69,7 @@ module.exports = merge(baseConfig, {
             ],
         }),
         new MiniCssExtractPlugin({
-            filename: "static/css/[name].css", // 抽离css的输出目录和名称
+            filename: "static/css/[name].[contenthash:8].css", // 抽离css的输出目录和名称
         }),
         // 清理无用css
         new PurgeCSSPlugin({

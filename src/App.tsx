@@ -1,7 +1,7 @@
 import React from 'react'
-import './style.scss'
+import { Button } from 'antd';
 
 function App() {
-  return <h2>webpack5-rea11ct-ts</h2>
+  return <Button>21312</Button>
 }
 export default App

@@ -8,7 +8,7 @@ module.exports = {
     entry: path.join(__dirname, "src/index.tsx"),
     // 打包文件出口
     output: {
-        filename: "lib/[name].[chunkhash:8]js", // 每个输出js的名称
+        filename: "lib/[name].[chunkhash:8].js", // 每个输出js的名称
         path: path.join(__dirname, "dist"), // 打包结果输出路径
         clean: true,
     },
@@ -36,7 +36,7 @@ module.exports = {
             {
                 test: /.(ts|tsx)$/, // 匹配.ts, tsx文件
                 include: [path.join(__dirname, "src")],
-                use: ["thread-loader", "babel-loader"],
+                use: [/* "thread-loader",  */"babel-loader"],
             },
             {
                 test: /.css$/, //匹配所有的 css 文件
