@@ -5,19 +5,20 @@ type Path = string;
 type Page = [Path, React.LazyExoticComponent<() => JSX.Element>, Page[]?];
 
 const Pages: Page[] = [
-    ["", lazy(() => import("@/pages/Home"))],
+    ["/*", lazy(() => import("@/pages/Home"))],
     ["home", lazy(() => import("@/pages/Home"))],
     ["about", lazy(() => import("@/pages/About"))],
     [
-        "demo",
+        "demo/*",
         lazy(() => import("@/pages/Demo")),
         [
-            ["", lazy(() => import("@/pages/Demo/Demo1"))],
+            ["*", lazy(() => import("@/pages/Demo/Demo1"))],
             ["a1", lazy(() => import("@/pages/Demo/Demo1"))],
             ["a2", lazy(() => import("@/pages/Demo/Demo2"))],
         ],
     ],
 ];
+
 const getRoutes: (pages: Page[]) => RouteObject[] = (Pages) => {
     return Pages.map(([path, LazyJsxElement, children]) => {
         let childrenResult: RouteObject[] = [];
@@ -37,6 +38,16 @@ const getRoutes: (pages: Page[]) => RouteObject[] = (Pages) => {
     });
 };
 
+/* type UrlPathName = string;
+const getRoutesPath: () => UrlPathName[] = () => {
+    return Pages.map(([path, _, children]) => {
+        if (Array.isArray(children) && children.length) {
+            childrenResult = getRoutes(children);
+        }
+    });
+}; */
+
+/* export const RoutesPath = getRoutesPath(); */
 export default () => {
     const Routes = () => useRoutes(getRoutes(Pages));
     return (
